@@ -16,9 +16,6 @@ async fn main() -> Result<()> {
 }
 
 async fn start() -> Result<()> {
-    // if let Err(e) = Play::try_new() {
-    //     println!("Error: {}", e);
-    // }
     let play = Play::try_new()?;
 
     let mut listen_url = Option::None;
@@ -28,7 +25,6 @@ async fn start() -> Result<()> {
 
     while let Some(msg) = parse_websocket_message(ws_stream.next().await).await? {
         if listen_url.is_none() {
-            println!("listen_url is none");
             if !msg.station.listen_url.is_empty() {
                 play.play(&msg.station.listen_url)
             }

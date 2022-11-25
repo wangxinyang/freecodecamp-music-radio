@@ -16,6 +16,7 @@ enum PlayMessage {
 }
 
 impl Play {
+    #[allow(clippy::empty_loop)]
     pub fn try_new() -> Result<Self> {
         let (sender, reveiver) = mpsc::channel();
 
@@ -29,7 +30,6 @@ impl Play {
             // rodio do something here
             let (_stream, stream_handle) = rodio::OutputStream::try_default().unwrap();
             // loop {
-            println!("current_url is : {:?}", current_url);
             let response = reqwest::blocking::get(&current_url).unwrap();
             let sink = rodio::Sink::try_new(&stream_handle).unwrap();
             let source = Mp3StreamDecoder::new(response).unwrap();
