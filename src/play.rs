@@ -1,10 +1,10 @@
+use crate::mp3_stream_decoder::Mp3StreamDecoder;
+
 use anyhow::Result;
 use std::{
     sync::mpsc::{self, Sender},
     thread,
 };
-
-use crate::mp3_stream_decoder::Mp3StreamDecoder;
 
 pub struct Play {
     send: Sender<PlayMessage>,
@@ -22,6 +22,7 @@ impl Play {
 
         thread::spawn(move || {
             let (current_url, current_vol) = loop {
+                // receive the message from channel
                 if let Ok(PlayMessage::Play { listen_url, vol }) = reveiver.recv() {
                     break (listen_url, vol);
                 }

@@ -7,6 +7,7 @@ use futures_util::StreamExt;
 use model::CodeRadioMessage;
 use play::Play;
 
+// freecodecamp.org websocket url
 const WEBSOCKET_API_URL: &str =
     "wss://coderadio-admin.freecodecamp.org/api/live/nowplaying/coderadio";
 
@@ -19,6 +20,7 @@ async fn start() -> Result<()> {
     let play = Play::try_new()?;
 
     let mut listen_url = Option::None;
+    // get the websocket stream
     let (mut ws_stream, _) = tokio_tungstenite::connect_async(WEBSOCKET_API_URL)
         .await
         .expect("Failed to connect");
@@ -26,6 +28,7 @@ async fn start() -> Result<()> {
     while let Some(msg) = parse_websocket_message(ws_stream.next().await).await? {
         if listen_url.is_none() {
             if !msg.station.listen_url.is_empty() {
+                // send the url message into channel
                 play.play(&msg.station.listen_url)
             }
             listen_url = Some(msg.station.listen_url);
